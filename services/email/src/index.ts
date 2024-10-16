@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import { getMails, sendMail } from "./controllers";
 
 
 
@@ -23,6 +24,8 @@ app.get("/health", (_req, res) => {
 
 
 // routes 
+app.post('/emails/send', sendMail);
+app.get('/emails', getMails);
 
 // 404 handler
 app.use((_req, res) => {

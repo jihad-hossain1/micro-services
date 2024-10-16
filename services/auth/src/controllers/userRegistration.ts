@@ -2,15 +2,23 @@ import { Request, Response, NextFunction } from "express";
 import prisma from "@/prisma";
 import { UserCreateDTOSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import axios from "axios";
-import { USER_SERVICE_URL } from "@/config";
+import { EMAIL_SERVICE_URL, USER_SERVICE_URL } from "@/config";
 
+
+const generateVerificationCode = () => {
+    const timestamp = new Date().getTime().toString();
+    const randomNum = Math.floor(10 + Math.random() * 90);
+
+    let code = (timestamp + randomNum).slice(-5);
+
+    return code;
+};
 
 const userRegistration: any = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ) => {
     try {
         //
@@ -20,15 +28,13 @@ const userRegistration: any = async (
             return res.status(400).json({ error: parsedBody.error.errors });
         }
 
-
         const { email, password, name } = parsedBody.data;
 
         const existingUser = await prisma.user.findUnique({
             where: {
-                email
-            }
-        })
-
+                email,
+            },
+        });
 
         if (existingUser) {
             return res.status(409).json({ error: "User already exists" });
@@ -41,7 +47,7 @@ const userRegistration: any = async (
             data: {
                 email,
                 password: hasedPassword,
-                name
+                name,
             },
             select: {
                 id: true,
@@ -49,30 +55,39 @@ const userRegistration: any = async (
                 email: true,
                 role: true,
                 status: true,
-                verified: true
-            }
-        })
+                verified: true,
+            },
+        });
 
         // create the user profile by user service
 
         await axios.post(`${USER_SERVICE_URL}/users`, {
             authorId: user.id,
             name,
-            email
-        })
+            email,
+        });
 
         // TODO: generate verify token
+        const code = generateVerificationCode();
+        await prisma.verificationCode.create({
+            data: {
+                userId: user.id,
+                code,
+                expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
+            }
+        })
         // TODO: send token
+        await axios.post(`${EMAIL_SERVICE_URL}/emails`, {
+            recipient: user.email,
+            subject: "Verify your email",
+            body: `Your verification code is: ${code}`,
+            source: "user registration",
+        })
 
-
-        return res.status(201).json({ user });
+        return res.status(201).json({ user , message: "User created successfully" });
     } catch (error) {
         next(error);
     }
+};
 
-
-}
-
-
-export default userRegistration
-
+export default userRegistration;

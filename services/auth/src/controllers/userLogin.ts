@@ -3,7 +3,6 @@ import prisma from "@/prisma";
 import { UserLoginSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import axios from "axios";
 import { LoginAttempt } from "@prisma/client";
 
 

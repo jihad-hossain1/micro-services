@@ -1,10 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "@/prisma";
 import { EmailCreateDTOSchema } from "@/schemas";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import axios from "axios";
-import { transporter } from "@/config";
+import { defaultSender, transporter } from "@/config";
 
 const sendMail: any = async (
     req: Request,
@@ -20,22 +17,33 @@ const sendMail: any = async (
 
         const { recipient, subject, body, source, sender } = parsedBody.data;
 
+        const from = sender || defaultSender
+
         const emailOption = {
-            from: sender || process.env.DEFAULT_SENDER_EMAIL,
+            from,
             to: recipient,
             subject,
             text: body,
         };
 
-        const {rejected} = await transporter.sendMail(emailOption);
+        const { rejected } = await transporter.sendMail(emailOption);
 
-        if(rejected.length){
-            return res.status(400).json({error:rejected});
+        if (rejected.length) {
+            console.log("Email rejected", rejected);
+            return res.status(500).json({ error: "Failed to send email", message: "Email rejected" });
         }
 
-        
+        await prisma.email.create({
+            data: {
+                sender: from,
+                recipient,
+                subject,
+                body,
+                source,
+            },
+        })
 
-
+        return res.status(200).json({ message: "Email sent successfully" });
     } catch (error) {
         next(error);
     }

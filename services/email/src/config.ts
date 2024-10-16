@@ -8,3 +8,6 @@ export const transporter = nodemailer.createTransport({
     //     pass: process.env.EMAIL_PASSWORD
     // }
 })
+
+export const defaultSender = process.env.DEFAULT_SENDER_EMAIL  || "jihadkhan4191@gmail.com"
+
