@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import { userLogin, userRegistration, verifyToken } from "./controllers";
 
 
 
@@ -23,7 +24,9 @@ app.get("/health", (_req, res) => {
 
 
 // routes 
-
+app.post('/auth/register', userRegistration);
+app.post('/auth/login', userLogin);
+app.post('/auth/verify-token', verifyToken);
 
 // 404 handler
 app.use((_req, res) => {
