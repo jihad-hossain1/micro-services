@@ -5,7 +5,6 @@ import bcrypt from "bcryptjs";
 import axios from "axios";
 import { EMAIL_SERVICE_URL, USER_SERVICE_URL } from "@/config";
 
-
 const generateVerificationCode = () => {
     const timestamp = new Date().getTime().toString();
     const randomNum = Math.floor(10 + Math.random() * 90);
@@ -61,30 +60,39 @@ const userRegistration: any = async (
 
         // create the user profile by user service
 
-        await axios.post(`${USER_SERVICE_URL}/users`, {
-            authorId: user.id,
+         await axios.post(`${USER_SERVICE_URL}/users`, {
+            authUserId: user.id,
             name,
             email,
         });
 
+
         // TODO: generate verify token
         const code = generateVerificationCode();
-        await prisma.verificationCode.create({
+
+
+        const verificationCode = await prisma.verificationCode.create({
             data: {
                 userId: user.id,
                 code,
                 expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
-            }
-        })
+            },
+        });
+        console.log("🚀 ~ verificationCode:", verificationCode);
+
         // TODO: send token
-        await axios.post(`${EMAIL_SERVICE_URL}/emails`, {
+        const emailResponse = await axios.post(`${EMAIL_SERVICE_URL}/emails/send`, {
             recipient: user.email,
             subject: "Verify your email",
             body: `Your verification code is: ${code}`,
             source: "user registration",
-        })
+        });
 
-        return res.status(201).json({ user , message: "User created successfully" });
+        console.log("🚀 ~ emailResponse:", emailResponse);
+
+        return res
+            .status(201)
+            .json({ user, message: "User created successfully" });
     } catch (error) {
         next(error);
     }
