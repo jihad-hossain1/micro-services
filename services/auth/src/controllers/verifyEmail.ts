@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "@/prisma";
-import jwt from "jsonwebtoken";
 import { EmailVerificationSchema } from "@/schemas";
 import axios from "axios";
+import { generateVerificationCode, verificationWithMailSend } from "@/utils";
 
 const verifyEmail: any = async (
     req: Request,
@@ -37,8 +37,15 @@ const verifyEmail: any = async (
             },
         });
 
+
+        if(!emailVerification){
+            const _code = generateVerificationCode();
+            await verificationWithMailSend(user?.email as string, _code, user?.id as string)
+            return res.status(400).json({ error: "Invalid code " });
+        }
+
         // if code are expired
-        if ((emailVerification as any).expiresAt < new Date()) {
+        if ((emailVerification as any)?.expiresAt < new Date()) {
             return res.status(400).json({ error: "Code expired" });
         }
 
@@ -50,6 +57,7 @@ const verifyEmail: any = async (
             },
             data: {
                 status: "ACTIVE",
+                verified: true,
             },
         });
 
@@ -61,6 +69,7 @@ const verifyEmail: any = async (
                 status: "USED",
             },
         });
+
 
         await axios.post(`${process.env.EMAIL_SERVICE_URL}/emails/send`,{
             recipient: user?.email,

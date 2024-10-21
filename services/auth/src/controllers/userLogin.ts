@@ -45,9 +45,10 @@ const userLogin: any = async (
                 email
             }
         })
+        console.log("🚀 ~ user:", user)
 
         if (!user) {
-            await createLoginHistory({ userId: "Guest", ipAddress, userAgent, attempt: 'FAILED' });
+            // await createLoginHistory({ userId: "Guest", ipAddress, userAgent, attempt: 'FAILED' });
             return res.status(404).json({ error: "User not found" });
         }
 

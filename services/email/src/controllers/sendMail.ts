@@ -25,8 +25,10 @@ const sendMail: any = async (
             subject,
             text: body,
         };
+        console.log("🚀 ~ emailOption:", emailOption)
 
         const { rejected } = await transporter.sendMail(emailOption);
+        console.log("🚀 ~ rejected:", rejected)
 
         if (rejected.length) {
             console.log("Email rejected", rejected);

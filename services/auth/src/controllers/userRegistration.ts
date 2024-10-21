@@ -4,15 +4,9 @@ import { UserCreateDTOSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
 import axios from "axios";
 import { EMAIL_SERVICE_URL, USER_SERVICE_URL } from "@/config";
+import { generateVerificationCode, verificationWithMailSend } from "@/utils";
 
-const generateVerificationCode = () => {
-    const timestamp = new Date().getTime().toString();
-    const randomNum = Math.floor(10 + Math.random() * 90);
 
-    let code = (timestamp + randomNum).slice(-5);
-
-    return code;
-};
 
 const userRegistration: any = async (
     req: Request,
@@ -71,24 +65,25 @@ const userRegistration: any = async (
         const code = generateVerificationCode();
 
 
-        const verificationCode = await prisma.verificationCode.create({
-            data: {
-                userId: user.id,
-                code,
-                expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
-            },
-        });
-        console.log("🚀 ~ verificationCode:", verificationCode);
+        // const verificationCode = await prisma.verificationCode.create({
+        //     data: {
+        //         userId: user.id,
+        //         code,
+        //         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
+        //     },
+        // });
+        // console.log("🚀 ~ verificationCode:", verificationCode);
 
-        // TODO: send token
-        const emailResponse = await axios.post(`${EMAIL_SERVICE_URL}/emails/send`, {
-            recipient: user.email,
-            subject: "Verify your email",
-            body: `Your verification code is: ${code}`,
-            source: "user registration",
-        });
+        // // TODO: send token
+        // const emailResponse = await axios.post(`${EMAIL_SERVICE_URL}/emails/send`, {
+        //     recipient: user.email,
+        //     subject: "Verify your email",
+        //     body: `Your verification code is: ${code}`,
+        //     source: "user registration",
+        // });
 
-        console.log("🚀 ~ emailResponse:", emailResponse);
+        // console.log("🚀 ~ emailResponse:", emailResponse);
+        const { emailResponse, verificationCode } = await verificationWithMailSend(user.email, code, user.id);
 
         return res
             .status(201)
@@ -97,5 +92,8 @@ const userRegistration: any = async (
         next(error);
     }
 };
+
+
+
 
 export default userRegistration;
