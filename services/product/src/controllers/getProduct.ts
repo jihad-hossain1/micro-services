@@ -3,7 +3,7 @@ import prisma from "@/prisma";
 import axios from "axios";
 import { INVENTORY_SERVICE_URL } from "@/config";
 
-const getProductDetails: any = async (
+const getProduct: any = async (
     _req: Request,
     res: Response,
     next: NextFunction,
@@ -68,4 +68,4 @@ const getProductDetails: any = async (
     }
 };
 
-export default getProductDetails;
+export default getProduct;

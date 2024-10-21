@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import { createProduct, getProductDetails, getProducts } from "./controllers";
+import { createProduct, getProduct, getProducts } from "./controllers";
 
 
 
@@ -22,7 +22,7 @@ app.get("/health", (_req, res) => {
 
 
 // routes 
-app.get("/products/:id/details", getProductDetails);
+app.get("/products/:id", getProduct);
 app.get("/products", getProducts);
 app.post("/products", createProduct);
 
