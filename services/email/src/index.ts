@@ -2,7 +2,9 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import { createProduct, getProduct, getProducts } from "./controllers";
+import { getMails, sendMail } from "./controllers";
+
+
 
 
 
@@ -12,8 +14,8 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-const port = process.env.PORT || 4001;
-const servicesName = process.env.SERVICES_NAME || "product-management";
+const port = process.env.PORT || 4005;
+const servicesName = process.env.SERVICES_NAME || "email-management";
 
 
 app.get("/health", (_req, res) => {
@@ -22,9 +24,8 @@ app.get("/health", (_req, res) => {
 
 
 // routes 
-app.get("/products/:id", getProduct);
-app.get("/products", getProducts);
-app.post("/products", createProduct);
+app.post('/emails/send', sendMail);
+app.get('/emails', getMails);
 
 // 404 handler
 app.use((_req, res) => {

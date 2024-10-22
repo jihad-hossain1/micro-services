@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import { userLogin, userRegistration, verifyEmail, verifyToken } from "./controllers";
 
 
 
@@ -13,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-const port = process.env.PORT || 3004;
+const port = process.env.PORT || 4006;
 const servicesName = process.env.SERVICES_NAME || "AUTH-management";
 
 
@@ -23,7 +24,10 @@ app.get("/health", (_req, res) => {
 
 
 // routes 
-
+app.post('/auth/register', userRegistration);
+app.post('/auth/login', userLogin);
+app.post('/auth/verify-token', verifyToken);
+app.post('/auth/verify-email', verifyEmail);
 
 // 404 handler
 app.use((_req, res) => {
