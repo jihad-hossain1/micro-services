@@ -1,0 +1,11 @@
+# api-getway/Dockerfile
+FROM node:20
+
+WORKDIR /src
+
+COPY package*.json ./
+RUN yarn
+COPY . .
+
+EXPOSE 8081
+CMD ["yarn", "dev"]

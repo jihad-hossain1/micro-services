@@ -34,7 +34,6 @@ services:
        PGADMIN_DEFAULT_EMAIL: admin@example.com
        PGADMIN_DEFAULT_PASSWORD: admin
 
-
   mailhog:
     image: mailhog/mailhog
     container_name: mailhog
@@ -44,7 +43,7 @@ services:
       - '8025:8025'
     volumes:
       - mailhog:/var/lib/mailhog
-
+  
 
 volumes:
   postgres:
