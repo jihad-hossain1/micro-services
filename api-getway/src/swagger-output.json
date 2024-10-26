@@ -1,0 +1,50 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "API Getway",
+        "description": "API Getway"
+    },
+    "host": "localhost:8081",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/users": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get all users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

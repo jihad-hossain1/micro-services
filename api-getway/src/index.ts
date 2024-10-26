@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import { configureRoutes } from "./utils";
+import swaggerUi from "swagger-ui-express";
+import swaggerJSONDoc from "./swagger-output.json";
+
 
 dotenv.config();
 
@@ -23,6 +26,9 @@ const limiter = rateLimit({
    }
 });
 app.use('/api',limiter);
+
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJSONDoc));
 
 app.use(express.json());
 app.use(morgan("dev"));
