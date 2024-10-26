@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc && tsc-alias",
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
-    "sd": "node /src/swagger.js"
+    "sd": "node ./src/swagger.js"
   },
   "keywords": [],
   "author": "",

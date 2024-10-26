@@ -1,9 +1,16 @@
 {
-    "swagger": "2.0",
+    "openapi": "3.1.0",
     "info": {
         "version": "1.0.0",
         "title": "API Getway",
-        "description": "API Getway"
+        "summary": "Microservice API Getway",
+        "description": "Microservice API Getway, This is a simple API for getway",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Jihad Hossain",
+            "url": "https://jihad-blog-main.vercel.app",
+            "email": "jihadkhan934@gmail.com"
+        }
     },
     "host": "localhost:8081",
     "basePath": "/api",
@@ -16,14 +23,18 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Get all users",
+                "description": "Get all users",
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/User"
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/User"
+                                    }
+                                }
                             }
                         }
                     }
@@ -41,7 +52,13 @@
                 "email": {
                     "type": "string"
                 },
-                "password": {
+                "phone": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "authUserId": { 
                     "type": "string"
                 }
             }
