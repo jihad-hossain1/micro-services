@@ -1,5 +1,6 @@
 {
     "openapi": "3.1.0",
+
     "info": {
         "version": "1.0.0",
         "title": "API Getway",
@@ -12,20 +13,29 @@
             "email": "jihadkhan934@gmail.com"
         }
     },
+    
     "host": "localhost:8081",
     "basePath": "/api",
     "schemes": [
         "http"
     ],
+
+    "servers": [
+    {
+        "url": "http://localhost:8081/api",
+        "description": "Local server"
+    }
+    ],
+
     "paths": {
         "/users": {
-            "get": {
+            "post": {
                 "tags": [
                     "User"
                 ],
-                "description": "Get all users",
+                "description": "Post a user",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "OK",
                         "content": {
                             "application/json": {
@@ -39,9 +49,31 @@
                         }
                     }
                 }
-            }
+            },
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Get all users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/AllUsers"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
         }
     },
+
     "definitions": {
         "User": {
             "type": "object",
@@ -62,6 +94,9 @@
                     "type": "string"
                 }
             }
+        },
+        "AllUsers": {
+            "type": "array"
         }
     }
 }

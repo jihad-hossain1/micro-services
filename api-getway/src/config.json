@@ -69,6 +69,11 @@
                     "path": "/users/:id",
                     "methods": ["get"],
                     "middlewares": ["auth"]
+                },
+                {
+                    "path": "/users",
+                    "methods": ["get"],
+                    "middlewares": []
                 }
             ]
         }
