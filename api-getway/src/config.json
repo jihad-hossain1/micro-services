@@ -17,14 +17,17 @@
                     "path": "/products/:id",
                     "methods": ["get"],
                     "middlewares": []
+                },
+                {
+                    "path": "/health",
+                    "methods": ["get"],
+                    "middlewares": []
                 }
             ]
-            
         },
         "inventory": {
             "url": "http://localhost:4002",
             "routes": [
-                
                 {
                     "path": "/inventories/:id",
                     "methods": ["put"],
@@ -32,6 +35,21 @@
                 },
                 {
                     "path": "/inventories/:id/details",
+                    "methods": ["get"],
+                    "middlewares": []
+                },
+                {
+                    "path": "/inventories",
+                    "methods": ["post"],
+                    "middlewares": []
+                },
+                {
+                    "path": "/inventories/:id",
+                    "methods": ["put"],
+                    "middlewares": []
+                },
+                {
+                    "path": "/health",
                     "methods": ["get"],
                     "middlewares": []
                 }
@@ -62,7 +80,7 @@
                 }
             ]
         },
-        "user":{
+        "user": {
             "url": "http://localhost:4004",
             "routes": [
                 {
@@ -72,6 +90,36 @@
                 },
                 {
                     "path": "/users",
+                    "methods": ["get"],
+                    "middlewares": []
+                },
+                {
+                    "path": "/users",
+                    "methods": ["post"],
+                    "middlewares": []
+                },
+                {
+                    "path": "/health",
+                    "methods": ["get"],
+                    "middlewares": []
+                }
+            ]
+        },
+        "email": {
+            "url": "http://localhost:4005",
+            "routes": [
+                {
+                    "path": "/emails/send",
+                    "methods": ["post"],
+                    "middlewares": []
+                },
+                {
+                    "path": "/emails",
+                    "methods": ["get"],
+                    "middlewares": []
+                },
+                {
+                    "path": "/health",
                     "methods": ["get"],
                     "middlewares": []
                 }

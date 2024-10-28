@@ -139,6 +139,10 @@ open terminal and run
 ```bash
 docker-compose up
 ```
+or another one
+```bash
+docker-compose up --build
+```
 
 run server
 ```bash
@@ -148,3 +152,23 @@ migrate database
 ```bash
 npm run migrate:dev
 ```
+
+<!-- --api-getway
+  --src
+    --controllers
+    --index.ts
+  package.json
+  package-lock.json
+  tsconfig.json
+--services
+  --auth
+    --src
+      --controllers
+      --index.ts
+    package.json
+    package-lock.json
+    tsconfig.json
+  --user
+  --email
+  --product
+  --inventory -->
