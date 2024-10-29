@@ -6,7 +6,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import { configureRoutes } from "./utils";
 import swaggerUi from "swagger-ui-express";
-import swaggerJSONDoc from "./swagger-output.json";
+import swaggerJSONDoc from "./swagger.json";
 
 
 dotenv.config();

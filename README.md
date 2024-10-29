@@ -21,6 +21,19 @@ install types
 npm i -D @types/express @types/node @types/cors
 
 ```
+setup redis
+```bash
+docker run -it --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
+
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
+
+```
+remove docker container
+```bash
+docker rm redis-stack redis-stack-server
+
+```
+
 set up tsconfig
 ```json
 {
