@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import { addToCart } from "./controllers";
+import { addToCart, getMyCart } from "./controllers";
 
 dotenv.config();
 const app = express();
@@ -19,6 +19,7 @@ app.get("/health", (_req, res) => {
 
 // routes
 app.post("/cart/add-to-cart", addToCart);
+app.get("/cart/me", getMyCart);
 
 // 404 handler
 app.use((_req, res) => {
