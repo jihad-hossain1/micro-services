@@ -1,31 +1,44 @@
 import redis from "@/redis";
-import { Request, Response,NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 
-
-const getMyCart : any = async (req: Request, res: Response, next: NextFunction) => {
+const getMyCart: any = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
     try {
-       const cartSessionId = req.headers["x-cart-session-id"] as string || null;
-      
-       if (!cartSessionId) {
-        return res.status(200).json({ data: [] });
-       }
+        const cartSessionId =
+            (req.headers["x-cart-session-id"] as string) || null;
 
-       const session = await redis.exists(`sessions:${cartSessionId}`)
+        if (!cartSessionId) {
+            return res.status(200).json({ data: [] });
+        }
 
-       if(!session) {
-        await redis.del(`cart:${cartSessionId}`)
-        return res.status(200).json({ data: [] });
-       }
+        const session = await redis.exists(`sessions:${cartSessionId}`);
 
-       const cart = await redis.hgetall(`cart:${cartSessionId}`);
+        if (!session) {
+            await redis.del(`cart:${cartSessionId}`);
+            return res.status(200).json({ data: [] });
+        }
 
-        return res.status(200).json({ data: cart });
+        const items = await redis.hgetall(`cart:${cartSessionId}`);
 
+        if (Object.keys(items).length === 0) {
+            return res.status(200).json({ data: [] });
+        }
+
+        const formattedItems = Object.keys(items).map((key) => {
+            const { quantity, inventoryId } = JSON.parse(items[key]) as {
+                inventoryId: string;
+                quantity: number;
+            };
+            return { inventoryId, quantity, productId: key };
+        });
+
+        return res.status(200).json({ data: formattedItems });
     } catch (error) {
         next(error);
     }
 };
 
-
-
-export default getMyCart
+export default getMyCart;

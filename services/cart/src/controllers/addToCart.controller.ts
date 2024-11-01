@@ -1,4 +1,5 @@
-import { CART_TTL } from "@/config";
+import axios from "axios";
+import { CART_TTL, INVENTORY_SERVICE_URL } from "@/config";
 import redis from "@/redis";
 import { CartCreateDTOSchema } from "@/schemas";
 import { Request, Response, NextFunction } from "express";
@@ -41,7 +42,43 @@ const addToCart: any = async (
             res.setHeader("x-cart-session-id", cartSessionId);
         }
 
-    // add item to the cart
+        // console.log("🚀 ~ cartSessionId:", cartSessionId);
+
+        // check if the inventory is available
+        const { data } = await axios.get(
+            `${INVENTORY_SERVICE_URL}/inventories/${parsedBody.data.inventoryId}`,
+        );
+        console.log("🚀 ~ data:", data.quantity);
+
+        if (Number(data.quantity) < parsedBody.data.quantity) {
+            return res.status(400).json({ message: "Inventory not available" });
+        }
+
+        // check TODO: if the item is already in the cart
+        // logic: parsedBody.data.quantity - existing quantity
+
+        // const item = await redis.hget(
+        //     `cart:${cartSessionId}`,
+        //     parsedBody.data.productId,
+        // );
+
+        // if (item) {
+        //     await redis.hset(
+        //         `cart:${cartSessionId}`,
+        //         parsedBody.data.productId,
+        //         JSON.stringify({
+        //             inventoryId: parsedBody.data.inventoryId,
+        //             quantity: Number(item) + parsedBody.data.quantity,
+        //         }),
+        //     )
+
+        //     return res.status(200).json({
+        //         message: "Item added to cart",
+        //         cartSessionId: cartSessionId,
+        //     });
+        // }
+        
+        // add item to the cart
         await redis.hset(
             `cart:${cartSessionId}`,
             parsedBody.data.productId,
@@ -51,11 +88,25 @@ const addToCart: any = async (
             }),
         );
 
-        return res.status(200).json({message: "Item added to cart",cartSessionId: cartSessionId});
+        // update inventory
+        await axios.put(
+            `${INVENTORY_SERVICE_URL}/inventories/${parsedBody.data.inventoryId}`,
+            {
+                quantity: parsedBody.data.quantity,
+                actionType: "OUT",
+            },
+        );
 
-        // TODO: check inventory for availability
+        return res
+            .status(200)
+            .json({
+                message: "Item added to cart",
+                cartSessionId: cartSessionId,
+            });
+
         // TODO: update inventory
     } catch (error) {
+        console.log("🚀 ~add to cart error:", (error as Error).message);
         next(error);
     }
 };
