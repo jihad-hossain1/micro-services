@@ -3,7 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import { checkout, getOrderDetails, getOrders } from "./controllers";
-
+import './reciver';
 
 
 

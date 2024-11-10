@@ -54,7 +54,18 @@ services:
     environment:
       - REDIS_ARGS=-save 900 1
 
+  rabbitmq: 
+    image: rabbitmq:3.8-management
+    ports:
+    - '5672:5672'
+    - '15672:15672'
+    volumes:
+    - rabbitmq_data:/var/libb/rabbitmq
+
+    
+
 volumes:
   postgres:
   mailhog:
   redis-stack:
+  rabbitmq_data:
