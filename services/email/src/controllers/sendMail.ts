@@ -27,13 +27,13 @@ const sendMail: any = async (
         };
         console.log("🚀 ~ emailOption:", emailOption)
 
-        const { rejected } = await transporter.sendMail(emailOption);
-        console.log("🚀 ~ rejected:", rejected)
+        // const { rejected } = await transporter.sendMail(emailOption);
+        // console.log("🚀 ~ rejected:", rejected)
 
-        if (rejected.length) {
-            console.log("Email rejected", rejected);
-            return res.status(500).json({ error: "Failed to send email", message: "Email rejected" });
-        }
+        // if (rejected.length) {
+        //     console.log("Email rejected", rejected);
+        //     return res.status(500).json({ error: "Failed to send email", message: "Email rejected" });
+        // }
 
         await prisma.email.create({
             data: {
@@ -47,6 +47,7 @@ const sendMail: any = async (
 
         return res.status(200).json({ message: "Email sent successfully" });
     } catch (error) {
+        console.log("🚀 ~ error:", error)
         next(error);
     }
 };

@@ -1,0 +1,61 @@
+
+
+services:
+  api-gateway:
+    build:
+      context: ./api-getway
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"  # Change to your desired port
+    networks:
+      - mynetwork
+
+  auth:
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    ports:
+      - "4006:4006"
+    networks:
+      - mynetwork
+
+  user:
+    build:
+      context: ./services/user
+      dockerfile: Dockerfile
+    ports:
+      - "4002:4002"
+    networks:
+      - mynetwork
+
+  email:
+    build:
+      context: ./services/email
+      dockerfile: Dockerfile
+    ports:
+      - "4003:4003"
+    networks:
+      - mynetwork
+
+  product:
+    build:
+      context: ./services/product
+      dockerfile: Dockerfile
+    ports:
+      - "4004:4004"
+    networks:
+      - mynetwork
+
+  inventory:
+    build:
+      context: ./services/inventory
+      dockerfile: Dockerfile
+    ports:
+      - "4005:4005"
+    networks:
+      - mynetwork
+  
+
+networks:
+  mynetwork:
+    driver: bridge
